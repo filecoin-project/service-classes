@@ -39,12 +39,6 @@
     - [What improvements are planned for Spark retrieval checking?](#what-improvements-are-planned-for-spark-retrieval-checking)
     - [Why do checkers report back the storage clients that made the deal?](#why-do-checkers-report-back-the-storage-clients-that-made-the-deal)
     - [Why do IPNI outages impact SP RSR?](#why-do-ipni-outages-impact-sp-rsr)
-- [Earlier drafts](#earlier-drafts)
-  - [What Is It?](#what-is-it)
-  - [How does this compare to web2 counterparts?](#how-does-this-compare-to-web2-counterparts)
-  - [Why isn’t this called “Retrieval Success Rate”?](#why-isnt-this-called-retrieval-success-rate)
-  - [Open Questions](#open-questions)
-  - [Tools That Measure It](#tools-that-measure-it)
 
 
 # Meta
@@ -357,86 +351,11 @@ For full transparency, a list of potential issues or concerns about this SLI are
 
 When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted into the Spark API, they are stored in Storacha and committed on chain as part of [Reporting Measurements to Spark-API](#reporting-measurements-to-spark-api) . Spark Evaluate then runs logic to determine which measurements are valid and contribute to the Spark RSR and which are not valid. The following table shows which retrieval result codes are contributing to the RSR calculation.
 
-| Retrieval Result Code | Situations That Yield This Result | Contributes to RSR? |
-| --- | --- | --- |
-| OK | The retrieval was successful. | YES |
-| RPC Failure | JSON RPC service is:
-1. unreachable OR 
-2. not returning results OR
-3. returning empty results for a storage provider’s peerId
-after multiple timeout-bound attempts (5) with exponential backoff. | NO |
-| TIMEOUT | A request is marked as timed out if no progress has been made for 60 seconds, where progress occurs if:
-- The connection has been established
-- A byte has been received | YES |
-| CAR_TOO_LARGE | The root block is bigger than 200MB 
-
-Notes:
-* At least as of 2024-10-21, this error isn’t observed.
-* If it feeds into RSR, it is a way to poison an SP’s stats by doing a deal with an SP that has a payloadCid that is “too large”.
-* If it is discarded from RSR, it is a way for SP to go into “ghost mode” (no metrics reported). | YES |
-| UNSUPPORTED_MULTIADDR_FORMAT | *(Trustless HTTP GW retrievals only.)*
-The checker node was not able to convert the multiaddr found in the IPNI advertisement to an HTTP(S) URL.  | YES |
-| HOSTNAME_DNS_ERROR | *(Trustless HTTP GW retrievals only.)*
-
-When making an HTTP request to the address found in the IPNI advertisement, the checker node was not able to resolve the hostname into an IP address. | YES |
-| CONNECTION_REFUSED | *(Trustless HTTP GW retrievals only.)*
-
-When making an HTTP request to the address found in the IPNI advertisement, the remote server refused the incoming connection.  | YES |
-| UNKNOWN_FETCH_ERROR | *(Trustless HTTP GW retrievals only.)*
-
-The checker could not make the HTTP request for reasons we don’t recognise yet. (Recognised reasons: HOSTNAME_DNS_ERROR and CONNECTION_REFUSED.) | YES |
-| UNSUPPORTED_CID_HASH_ALGO | The checker could not verify the received content matches the requested CID - the CID uses a hash algorithm we don’t support (yet). | YES |
-| CONTENT_VERIFICATION_FAILED | When the payloadCID bytes received from a storage provider don’t match the CID.   | YES |
-| UNEXPECTED_CAR_BLOCK | The CAR file returned by the provider includes other blocks than the requested one. | YES |
-| CANNOT_PARSE_CAR_FILE | The provider returned a malformed/corrupted CAR file. | YES |
-| IPNI_NOT_QUERIED | An outdated (or fraudulent) checker node did not report the result of the IPNI query in the measurement it submitted. | NO |
-| IPNI_NO_VALID_ADVERTISEMENT | After calling IPNI to obtain all retrieval providers, if when filtering the response to find the provider, the provider isn’t present. |  |
-| IPNI_ERROR_FETCH | The HTTP request to IPNI failed at the networking level (e.g. DNS resolution failed, connection refused, etc.)
-
-Reference: [https://github.com/filecoin-station/spark/blob/8214ca93fd6cbab79e14e31bbaa2e22b584fb587/lib/ipni-client.js#L16-L29](https://github.com/filecoin-station/spark/blob/8214ca93fd6cbab79e14e31bbaa2e22b584fb587/lib/ipni-client.js#L16-L29) | YES |
-| IPNI_ERROR_{number} | IPNI responded with HTTP status code `{number}` .
-
-`IPNI_ERROR_404` - nobody advertised retrievals for this payload CID. (This is similar to IPNI_NO_VALID_ADVERTISEMENT described above.) | YES |
-| HTTP_{number} | When the checker requested the CAR bytes using the Trustless HTTP Gateway protocol, the server (storage provider) responed with HTTP status code `{number}`.
-
-Example codes: `HTTP_502`, `HTTP_504`. | YES |
-| LASSIE_${number} | When the checker made an HTTP request to the local Lassie daemon handling Graphsync retrievals for Spark, Lassie responded with HTTP status code `{number}` .
-
-Example codes: `LASSIE_502`, `LASSIE_504`.
-
-Documentation for Lassie HTTP response status codes:
-[https://github.com/filecoin-project/lassie/blob/main/docs/HTTP_SPEC.md#response-status-codes](https://github.com/filecoin-project/lassie/blob/main/docs/HTTP_SPEC.md#response-status-codes) | YES |
-| LASSIE_504 | Lassie encountered timeout while fetching the data from the storage provider. This does not happen in practice, because we configure Lassie timeouts to one day (24 hours) and then trigger the timeout on the Spark side after 60 seconds. | YES |
-| UNKNOWN_ERROR | The retrieval check failed for a reason different from the ones described above. (This is a generic “fallback” code.) | YES |
-| CommitteeCheckError |  | NO |
-| Checker to Spark Publish Failure |  | NO |
-|  | IPNI  is not responding with results within timeout / retry allotment. | YES |
+TODO: insert clean HTML table from https://www.notion.so/protocollabs/Spark-Request-Based-Non-Committee-Global-Retrieval-Success-Rate-4c5e8c47c45f467f80392d00cac2aae4?pvs=4#122837df73d4803f917bf8e8eb13f9d4
 
 ## Per Request (non-committee) Score vs. Committee Scoring
 
-|  | non-committee (per request) scoring | committee scoring |
-| --- | --- | --- |
-| Description | Every request made by a Spark checker feeds into the metric (after doing basic “fraud” detection”), regardless of whether the checker’s result aligns with its committee.  
-
-For every <round, providerId, payloadCid>, the number of datapoints feeding into the SLI should be close to the size of the committee.  Committee size p50 is ~80, but it ultimately depends on depends on which nodes participate in the round. The aim is to have most committee sizes in the range of 40 to 100. | Only the committee’s honest majority result for a <round, providerId, payloadCid> feeds into the metric.  
-
-For every <round, providerId, payloadCid>, there will be a single datapoint feeding into the SLI.  (This is ~80x less data points than the non-committee case.) |
-| Currently used by FIL+ | Yes | No |
-| What it is sensitive to vs. what it obscures | Con: If a bad actor has 1% of the Spark Checkers and they always report that SPs fail, they can effectively bring every SP’s Spark RSR down by 1 percentage point.  
-
-That seems too sensitive.
-
-Pro: assuming most checkers are honest, it will differentiate the SPs that 80% of the time respond to requests with valid/correct results vs. those that give 99+%. | Pro: Bad actors would need to have 51% of the Spark Checkers in a given randomly generated committee to have impact.
-
-Con: It the worst case (from a visibility regard), an SP could fail retrieval for 49% of requests but still have 100% committee retrieval success rate.  
-
-I can’t imagine saying, “store with us!  99.9% of the time if you store with us one of two retrieval requests will succeed” |
-| Mitigations | 1. Spark checkers are only paid if their result is the same as the honest majority.  (That said, since the pay out is small, this is not a big incentive.)
-
-2. Any results in a <round, providerID, payloadCID> from the same IPv4 /24 subnet are discarded as part of “fraud detection”.  This means an attacker can’t simply spin up a plethora of nodes on one machine or their local network, but would need to distribute across multiple IP addresses.  (Note that in 202410, the [Spark dashboard](https://filspark.com/dashboard) shows ~7k daily active checkers.) |  |
-| web2 cloud analog
-
-S3 produces an “error rate” for each 5 minute bucket.  This error rate is a value between 0 (no errors) and 1 (all requests “errored”).  It then calculates an uptime percentage based on the average “error rate” across all 5 minute periods in the month. | Sort of.  We could calculate a value for each 5 minute period, and it will be a value between zero and one.  That said, to ensure there’s enough data points, we publish an SP’s “Spark retrieval success rate” each day based. | No.  If we view committee rounds to being similar to S3’s 5 minute buckets, the stark difference is that Spark committee scoring is 0 or 1., not a value in between. |
+TODO: insert clean HTML table from https://www.notion.so/protocollabs/Spark-Request-Based-Non-Committee-Global-Retrieval-Success-Rate-4c5e8c47c45f467f80392d00cac2aae4?pvs=4#122837df73d4803f917bf8e8eb13f9d4
 
 ## FAQ
 
@@ -448,7 +367,7 @@ Future versions of spark retrieval checking (see [What improvements are planned 
 
 ### What improvements are planned for Spark retrieval checking?
 
-See ‣.
+See https://www.notion.so/spacemeridian/Spark-v2-design-migration-115cdd5cccdb804ca4d1e0694c613318?pvs=4.
 
 ### Why do checkers report back the storage clients that made the deal?
 
@@ -457,42 +376,3 @@ To support the FIL+ allocator compliance process, Spark was asked to provide RSR
 ### Why do IPNI outages impact SP RSR?
 
 Per [Per Request (non-committee) Score vs. Committee Scoring](#per-request-non-committee-score-vs-committee-scoring), IPNI being unavailable will affect an SP’s retrievability.  This is a tough once since IPNI availability is outside of an SP’s control.  However, the Spark retrievability protocol is about getting the network to perform well, and if SPs scores are affected by IPNI going down, then this pushes IPNI to be vigilant. A code change could certainly be made so that IPNI failures don’t impact SP RSR, but this is the current status as of 2024-11-01.
-
----
-
-# Earlier drafts
-
-Initial drafting by @Steve (biglep), but this has been replaced by the above.
-
-## What Is It?
-
-TODO: this is a @Steve (biglep) sketch and needs review/details
-
-Within the previous 30 days period:
-
-- numerator: the number of “[retrieval requests](#retrieval-requests)” for CIDs within deals that an SP is storing where data is both returned within a timeout of X seconds and hashes/verifies correctly
-- denominator: the number of “retrieval requests” made to the SP that didn’t fail because of a client-side error.  (This means we include “retrieval requests” that timeout and “retrieval requests” that don’t hash/verify correctly.)
-
-The standard time period used is trailing 30 days.  As a result, the retrievability metric on date X involves looking at retrieval requests between [x-30 days, x].  
-
-A date’s metric includes the trailing 30 days rather than just that day to:
-
-1. Give SPs some operational wiggle room
-2. Give storage clients additional confidence when evaluating an SP that they are having sustained performance
-
-## How does this compare to web2 counterparts?
-
-TODO: fill this in 
-
-## Why isn’t this called “Retrieval Success Rate”?
-
-TODO: explain
-
-## Open Questions
-
-1. Are there retries within a “retrieval request”?
-2. Is there a timeout within a “retrieval request”?
-
-## Tools That Measure It
-
-1. Spark
