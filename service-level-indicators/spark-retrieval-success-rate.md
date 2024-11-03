@@ -1,8 +1,9 @@
 # Spark Request-Based (Non-Committee) Global Retrieval Success Rate <!-- omit from toc -->
 
 - [Meta](#meta)
-  - [Status](#status)
   - [Document Purpose](#document-purpose)
+  - [Versions](#versions)
+  - [Support, Questions, and Feedback](#support-questions-and-feedback)
 - [TL;DR](#tldr)
 - [Spark Protocol](#spark-protocol)
   - [Deal Ingestion](#deal-ingestion)
@@ -30,7 +31,7 @@
     - [Committee Retrieval Task Measurements](#committee-retrieval-task-measurements)
     - [Accepted Retrieval Task Measurement](#accepted-retrieval-task-measurement)
     - [Committee Accepted Retrieval Task Measurements](#committee-accepted-retrieval-task-measurements)
-  - [Provider Retrieval Result Stats](#provider-retrieval-result-stats)
+    - [Provider Retrieval Result Stats](#provider-retrieval-result-stats)
   - [Callouts/Concerns with this SLI](#calloutsconcerns-with-this-sli)
   - [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr)
   - [Per Request (non-committee) Score vs. Committee Scoring](#per-request-non-committee-score-vs-committee-scoring)
@@ -43,16 +44,20 @@
 
 # Meta
 
-## Status
-
-- 2024-11-01 - Another full round of review of edits by Patrick, Steve, and others.
-- 2024-10-22 - Second Draft from Patrick Woodhead
-- 2024-10-16 - In progress on receiving and incorporating feedback
-- 2024-10-14 - First draft from @Patrick Woodhead
-
 ## Document Purpose
 
 This document is intended to become the canonical resource that is referenced in [the Storage Providers Market Dashboard](https://github.com/filecoin-project/filecoin-storage-providers-market) wherever the “Spark Retrievability” graphs are shown.  A reader of those graphs should be able to read this document and understand the “Spark Retrievability SLO”.  The goal of this document is to explain fully and clearly “the rules of the game”.  With the “game rules”, we seek to empower market participants - onramps, aggregators and Storage Providers (SPs) - to “decide how they want to play the game”.
+
+## Versions
+
+TODO: add a table that shows Spark RSR version 1 is supported by which backend component versions.
+When we have v1.1, this would be a new row in a table, with a new set of backend cmponents.  
+
+## Support, Questions, and Feedback
+TODO: fill this in
+If you see errors in this document, please open a PR.
+If you have a question that isn't answered by the document, then ...
+If you want to discuss ideas for improving this proposoal, then ...
 
 # TL;DR
 
@@ -291,7 +296,7 @@ Nodes that do retrievability checks.  In practice, these are primarily Station n
     - Created by Spark-Evaluate
     - Consumed by Spark-Evaluate
 
-## Provider Retrieval Result Stats
+### Provider Retrieval Result Stats
 
 ```jsx
 {
