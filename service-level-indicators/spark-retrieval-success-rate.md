@@ -385,67 +385,102 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     </tr>
     <tr>
       <td>TIMEOUT</td>
-      <td></td>
+      <td>
+        A request is marked as timed out if no progress has been made for 60 seconds, where progress occurs if:
+        <ul>
+          <li>The connection has been established</li>
+          <li>A byte has been received</li>
+        </ul>
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>CAR_TOO_LARGE</td>
-      <td></td>
+      <td>
+        The root block is bigger than 200MB 
+
+        Notes:
+        <ul>
+          <li>At least as of 2024-10-21, this error isn’t observed.</li>
+          <li>If it feeds into RSR, it is a way to poison an SP’s stats by doing a deal with an SP that has a payloadCid that is “too large”.</li>
+          <li>If it is discarded from RSR, it is a way for SP to go into “ghost mode” (no metrics reported).</li>
+        </ul>
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>UNSUPPORTED_MULTIADDR_FORMAT</td>
-      <td></td>
+      <td>
+        (_Trustless HTTP GW retrievals only._)
+
+        The checker node was not able to convert the multiaddr found in the IPNI advertisement to an HTTP(S) URL. 
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>HOSTNAME_DNS_ERROR</td>
-      <td></td>
+      <td>
+        (_Trustless HTTP GW retrievals only._)
+
+        When making an HTTP request to the address found in the IPNI advertisement, the checker node was not able to resolve the hostname into an IP address.
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>CONNECTION_REFUSED</td>
-      <td></td>
+      <td>
+        (_Trustless HTTP GW retrievals only._)
+
+        When making an HTTP request to the address found in the IPNI advertisement, the remote server refused the incoming connection.
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>UNKNOWN_FETCH_ERROR</td>
-      <td></td>
+      <td>
+        (_Trustless HTTP GW retrievals only._)
+
+        The checker could not make the HTTP request for reasons we don’t recognise yet. (Recognised reasons: HOSTNAME_DNS_ERROR and CONNECTION_REFUSED.)
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>UNSUPPORTED_CID_HASH_ALGO</td>
-      <td></td>
+      <td>The checker could not verify the received content matches the requested CID - the CID uses a hash algorithm we don’t support (yet).</td>
       <td>YES</td>
     </tr>
     <tr>
       <td>CONTENT_VERIFICATION_FAILED</td>
-      <td></td>
+      <td>When the payloadCID bytes received from a storage provider don’t match the CID.  </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>UNEXPECTED_CAR_BLOCK</td>
-      <td></td>
+      <td>The CAR file returned by the provider includes other blocks than the requested one.</td>
       <td>YES</td>
     </tr>
     <tr>
       <td>CANNOT_PARSE_CAR_FILE</td>
-      <td></td>
+      <td>The provider returned a malformed/corrupted CAR file.</td>
       <td>YES</td>
     </tr>
     <tr>
       <td>IPNI_NOT_QUERIED</td>
-      <td></td>
+      <td>An outdated (or fraudulent) checker node did not report the result of the IPNI query in the measurement it submitted.</td>
       <td>NO</td>
     </tr>
     <tr>
       <td>IPNI_NO_VALID_ADVERTISEMENT</td>
-      <td></td>
+      <td>After calling IPNI to obtain all retrieval providers, if when filtering the response to find the provider, the provider isn’t present.</td>
       <td></td>
     </tr>
     <tr>
       <td>IPNI_ERROR_FETCH</td>
-      <td></td>
+      <td>
+        The HTTP request to IPNI failed at the networking level (e.g. DNS resolution failed, connection refused, etc.)
+
+        Reference: https://github.com/filecoin-station/spark/blob/8214ca93fd6cbab79e14e31bbaa2e22b584fb587/lib/ipni-client.js#L16-L29
+      </td>
       <td>YES</td>
     </tr>
     <tr>
