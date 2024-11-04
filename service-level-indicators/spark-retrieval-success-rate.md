@@ -533,7 +533,63 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
 
 ## Per Request (non-committee) Score vs. Committee Scoring
 
-TODO: insert clean HTML table from https://www.notion.so/protocollabs/Spark-Request-Based-Non-Committee-Global-Retrieval-Success-Rate-4c5e8c47c45f467f80392d00cac2aae4?pvs=4#122837df73d4803f917bf8e8eb13f9d4
+<table>
+  <thead>
+    <tr>
+      <td></td>
+      <td>non-committee (per request) scoring</td>
+      <td>committee scoring</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Description</td>
+      <td>
+        <p>Every request made by a Spark checker feeds into the metric (after doing basic “fraud” detection”), regardless of whether the checker’s result aligns with its committee.</p>
+        <p>For every <code>&lt;round, providerId, payloadCid&gt;</code>, the number of datapoints feeding into the SLI should be close to the size of the committee.  Committee size p50 is ~80, but it ultimately depends on depends on which nodes participate in the round. The aim is to have most committee sizes in the range of 40 to 100.</p>
+      </td>
+      <td>
+        <p>Only the committee’s honest majority result for a <code>&lt;round, providerId, payloadCid&gt;</code> feeds into the metric.</p>
+        <p>For every <code>&lt;round, providerId, payloadCid&gt;</code>, there will be a single datapoint feeding into the SLI.  (This is ~80x less data points than the non-committee case.)</p>
+      </td>
+    </tr>
+    <tr>
+      <td>Currently used by FIL+</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>What it is sensitive to vs. what it obscures</td>
+      <td>
+        <p>Con: If a bad actor has 1% of the Spark Checkers and they always report that SPs fail, they can effectively bring every SP’s Spark RSR down by 1 percentage point.</p>
+        <p>That seems too sensitive.</p>
+        <p>Pro: assuming most checkers are honest, it will differentiate the SPs that 80% of the time respond to requests with valid/correct results vs. those that give 99+%.</p>
+      </td>
+      <td>
+        Pro: Bad actors would need to have 51% of the Spark Checkers in a given randomly generated committee to have impact.<br /><br />
+        Con: It the worst case (from a visibility regard), an SP could fail retrieval for 49% of requests but still have 100% committee retrieval success rate.<br /><br />
+        I can’t imagine saying, “store with us!  99.9% of the time if you store with us one of two retrieval requests will succeed”
+      </td>
+    </tr>
+    <tr>
+      <td>Mitigations</td>
+      <td>
+        <ol>
+          <li>Spark checkers are only paid if their result is the same as the honest majority.  (That said, since the pay out is small, this is not a big incentive.)</li>
+          <li>Any results in a <code>&lt;round, providerID, payloadCID&gt;</code> from the same IPv4 /24 subnet are discarded as part of “fraud detection”.  This means an attacker can’t simply spin up a plethora of nodes on one machine or their local network, but would need to distribute across multiple IP addresses.  (Note that in 202410, the <a href="https://dashboard.filspark.com/">Spark dashboard</a> shows ~7k daily active checkers.)</li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        web2 cloud analog<br /><br />
+        S3 produces an “error rate” for each 5 minute bucket.  This error rate is a value between 0 (no errors) and 1 (all requests “errored”).  It then calculates an uptime percentage based on the average “error rate” across all 5 minute periods in the month.
+      </td>
+      <td>Sort of.  We could calculate a value for each 5 minute period, and it will be a value between zero and one.  That said, to ensure there’s enough data points, we publish an SP’s “Spark retrieval success rate” each day based.</td>
+      <td>No.  If we view committee rounds to being similar to S3’s 5 minute buckets, the stark difference is that Spark committee scoring is 0 or 1., not a value in between.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## FAQ
 
