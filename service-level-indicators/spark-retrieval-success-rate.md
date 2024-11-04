@@ -356,7 +356,35 @@ For full transparency, a list of potential issues or concerns about this SLI are
 
 When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted into the Spark API, they are stored in Storacha and committed on chain as part of [Reporting Measurements to Spark-API](#reporting-measurements-to-spark-api) . Spark Evaluate then runs logic to determine which measurements are valid and contribute to the Spark RSR and which are not valid. The following table shows which retrieval result codes are contributing to the RSR calculation.
 
-TODO: insert clean HTML table from https://www.notion.so/protocollabs/Spark-Request-Based-Non-Committee-Global-Retrieval-Success-Rate-4c5e8c47c45f467f80392d00cac2aae4?pvs=4#122837df73d4803f917bf8e8eb13f9d4
+<table>
+  <thead>
+    <tr>
+      <td>Retrieval Result Code</td>
+      <td>Situations That Yield This Result</td>
+      <td>Contributes to RSR?</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OK</td>
+      <td>The retrieval was successful.</td>
+      <td>YES</td>
+    </tr>
+    <tr>
+      <td>RPC Failure</td>
+      <td>
+        JSON RPC service is:
+        <ol>
+          <li>unreachable OR</li>
+          <li>not returning results OR</li>
+          <li>returning empty results for a storage provider’s peerId
+          after multiple timeout-bound attempts (5) with exponential backoff.</li>
+        </ol>
+      </td>
+      <td>No.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Per Request (non-committee) Score vs. Committee Scoring
 
