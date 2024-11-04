@@ -386,57 +386,57 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     <tr>
       <td>TIMEOUT</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>CAR_TOO_LARGE</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>UNSUPPORTED_MULTIADDR_FORMAT</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>HOSTNAME_DNS_ERROR</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>CONNECTION_REFUSED</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>UNKNOWN_FETCH_ERROR</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>UNSUPPORTED_CID_HASH_ALGO</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>CONTENT_VERIFICATION_FAILED</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>UNEXPECTED_CAR_BLOCK</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>CANNOT_PARSE_CAR_FILE</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>IPNI_NOT_QUERIED</td>
       <td></td>
-      <td></td>
+      <td>NO</td>
     </tr>
     <tr>
       <td>IPNI_NO_VALID_ADVERTISEMENT</td>
@@ -446,47 +446,47 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     <tr>
       <td>IPNI_ERROR_FETCH</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>IPNI_ERROR_{number}</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>HTTP_{number}</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>LASSIE_${number}</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>LASSIE_504</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>UNKNOWN_ERROR</td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
     <tr>
       <td>CommitteeCheckError</td>
       <td></td>
-      <td></td>
+      <td>NO</td>
     </tr>
     <tr>
       <td>Checker to Spark Publish Failure</td>
       <td></td>
-      <td></td>
+      <td>NO</td>
     </tr>
     <tr>
       <td></td>
       <td></td>
-      <td></td>
+      <td>YES</td>
     </tr>
   </tbody>
 </table>
