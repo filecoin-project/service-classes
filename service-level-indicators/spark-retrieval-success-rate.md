@@ -485,27 +485,42 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     </tr>
     <tr>
       <td>IPNI_ERROR_{number}</td>
-      <td></td>
+      <td>
+        IPNI responded with HTTP status code `{number}`.
+
+        `IPNI_ERROR_404` - nobody advertised retrievals for this payload CID. (This is similar to IPNI_NO_VALID_ADVERTISEMENT described above.)
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>HTTP_{number}</td>
-      <td></td>
+      <td>
+        When the checker requested the CAR bytes using the Trustless HTTP Gateway protocol, the server (storage provider) responed with HTTP status code `{number}`.
+
+        Example codes: `HTTP_502`, `HTTP_504`.
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>LASSIE_${number}</td>
-      <td></td>
+      <td>
+        When the checker made an HTTP request to the local Lassie daemon handling Graphsync retrievals for Spark, Lassie responded with HTTP status code `{number}`.
+        
+        Example codes: `LASSIE_502`, `LASSIE_504`.
+        
+        Documentation for Lassie HTTP response status codes:
+        https://github.com/filecoin-project/lassie/blob/main/docs/HTTP_SPEC.md#response-status-codes
+      </td>
       <td>YES</td>
     </tr>
     <tr>
       <td>LASSIE_504</td>
-      <td></td>
+      <td>Lassie encountered timeout while fetching the data from the storage provider. This does not happen in practice, because we configure Lassie timeouts to one day (24 hours) and then trigger the timeout on the Spark side after 60 seconds.</td>
       <td>YES</td>
     </tr>
     <tr>
       <td>UNKNOWN_ERROR</td>
-      <td></td>
+      <td>The retrieval check failed for a reason different from the ones described above. (This is a generic “fallback” code.)</td>
       <td>YES</td>
     </tr>
     <tr>
@@ -520,7 +535,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     </tr>
     <tr>
       <td></td>
-      <td></td>
+      <td>IPNI  is not responding with results within timeout / retry allotment.</td>
       <td>YES</td>
     </tr>
   </tbody>
