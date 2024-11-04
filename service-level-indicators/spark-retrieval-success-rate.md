@@ -397,8 +397,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     <tr>
       <td>CAR_TOO_LARGE</td>
       <td>
-        The root block is bigger than 200MB 
-
+        The root block is bigger than 200MB.
         Notes:
         <ul>
           <li>At least as of 2024-10-21, this error isn’t observed.</li>
@@ -412,7 +411,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>UNSUPPORTED_MULTIADDR_FORMAT</td>
       <td>
         (_Trustless HTTP GW retrievals only._)
-
         The checker node was not able to convert the multiaddr found in the IPNI advertisement to an HTTP(S) URL. 
       </td>
       <td>YES</td>
@@ -421,7 +419,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>HOSTNAME_DNS_ERROR</td>
       <td>
         (_Trustless HTTP GW retrievals only._)
-
         When making an HTTP request to the address found in the IPNI advertisement, the checker node was not able to resolve the hostname into an IP address.
       </td>
       <td>YES</td>
@@ -430,7 +427,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>CONNECTION_REFUSED</td>
       <td>
         (_Trustless HTTP GW retrievals only._)
-
         When making an HTTP request to the address found in the IPNI advertisement, the remote server refused the incoming connection.
       </td>
       <td>YES</td>
@@ -439,7 +435,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>UNKNOWN_FETCH_ERROR</td>
       <td>
         (_Trustless HTTP GW retrievals only._)
-
         The checker could not make the HTTP request for reasons we don’t recognise yet. (Recognised reasons: HOSTNAME_DNS_ERROR and CONNECTION_REFUSED.)
       </td>
       <td>YES</td>
@@ -478,7 +473,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>IPNI_ERROR_FETCH</td>
       <td>
         The HTTP request to IPNI failed at the networking level (e.g. DNS resolution failed, connection refused, etc.)
-
         Reference: https://github.com/filecoin-station/spark/blob/8214ca93fd6cbab79e14e31bbaa2e22b584fb587/lib/ipni-client.js#L16-L29
       </td>
       <td>YES</td>
@@ -487,7 +481,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>IPNI_ERROR_{number}</td>
       <td>
         IPNI responded with HTTP status code `{number}`.
-
         `IPNI_ERROR_404` - nobody advertised retrievals for this payload CID. (This is similar to IPNI_NO_VALID_ADVERTISEMENT described above.)
       </td>
       <td>YES</td>
@@ -496,7 +489,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>HTTP_{number}</td>
       <td>
         When the checker requested the CAR bytes using the Trustless HTTP Gateway protocol, the server (storage provider) responed with HTTP status code `{number}`.
-
         Example codes: `HTTP_502`, `HTTP_504`.
       </td>
       <td>YES</td>
@@ -505,9 +497,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>LASSIE_${number}</td>
       <td>
         When the checker made an HTTP request to the local Lassie daemon handling Graphsync retrievals for Spark, Lassie responded with HTTP status code `{number}`.
-        
         Example codes: `LASSIE_502`, `LASSIE_504`.
-        
         Documentation for Lassie HTTP response status codes:
         https://github.com/filecoin-project/lassie/blob/main/docs/HTTP_SPEC.md#response-status-codes
       </td>
