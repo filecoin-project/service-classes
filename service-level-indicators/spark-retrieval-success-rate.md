@@ -358,9 +358,9 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
 <table>
   <thead>
     <tr>
-      <td>Retrieval Result Code</td>
-      <td>Situations That Yield This Result</td>
-      <td>Contributes to RSR?</td>
+      <th>Retrieval Result Code</th>
+      <th>Situations That Yield This Result</th>
+      <th>Contributes to RSR?</th>
     </tr>
   </thead>
   <tbody>
@@ -380,7 +380,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
           after multiple timeout-bound attempts (5) with exponential backoff.</li>
         </ol>
       </td>
-      <td>No.</td>
+      <td>NO</td>
     </tr>
     <tr>
       <td>TIMEOUT</td>
@@ -485,6 +485,11 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>YES</td>
     </tr>
     <tr>
+      <td>IPNI_???</td>
+      <td>IPNI is not responding with results within timeout / retry allotment.</td>
+      <td>YES</td>
+    </tr>
+    <tr>
       <td>HTTP_{number}</td>
       <td>
         When the checker requested the CAR bytes using the Trustless HTTP Gateway protocol, the server (storage provider) responed with HTTP status code <code>{number}</code>.<br />
@@ -522,11 +527,6 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td></td>
       <td>NO</td>
     </tr>
-    <tr>
-      <td></td>
-      <td>IPNI  is not responding with results within timeout / retry allotment.</td>
-      <td>YES</td>
-    </tr>
   </tbody>
 </table>
 
@@ -535,9 +535,9 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
 <table>
   <thead>
     <tr>
-      <td></td>
-      <td>non-committee (per request) scoring</td>
-      <td>committee scoring</td>
+      <th></th>
+      <th>non-committee (per request) scoring</th>
+      <th>committee scoring</th>
     </tr>
   </thead>
   <tbody>
@@ -578,6 +578,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
           <li>Any results in a <code>&lt;round, providerID, payloadCID&gt;</code> from the same IPv4 /24 subnet are discarded as part of “fraud detection”.  This means an attacker can’t simply spin up a plethora of nodes on one machine or their local network, but would need to distribute across multiple IP addresses.  (Note that in 202410, the <a href="https://dashboard.filspark.com/">Spark dashboard</a> shows ~7k daily active checkers.)</li>
         </ol>
       </td>
+      <td></td>
     </tr>
     <tr>
       <td>
