@@ -129,7 +129,7 @@ The choices in each round for $k$ and the length of the Round Retrieval Task Lis
 
 The Spark Checkers that are members of each committee will go on to make the same [retrieval checks](#retrieval-checks) in the round. Each committee member then publishes their results to the Spark API (see [Reporting Measurements to Spark-API](#reporting-measurements-to-spark-api)), which then calculates the honest majority consensus about the result of the Retrieval Task (see [Evaluating Measurements with Spark-Evaluate](#evaluating-measurements-with-spark-evaluate)).
 
-Only the $k$ tasks that have been assigned to a checker in each round are treated as valid and included in the Spark RSR calculation, all others are ignored. This also means Spark checkers only get rewarded for their specified tasks each round.
+Only the $k$ tasks that the reproducible checker task selection algorithm picks in each round are treated as valid and included in the Spark RSR calculation, all others are ignored.
 
 ## Retrieval Checks
 
