@@ -160,7 +160,7 @@ Failed retrieval attempts are also reported with a reason code for the failure r
 
 ## Evaluating Measurements with Spark-Evaluate
 
-[Spark-Evaluate](https://github.com/filecoin-station/spark-evaluate) is the Spark service that evaluates each measurement to decide whether or not it is valid. It listens out for on-chain events that indicate that the Spark Publish logic has posted a commitment on chain. It then takes the CID of the on chain commitment and fetches the corresponding measurements from Storacha.
+[Spark-Evaluate](https://github.com/filecoin-station/spark-evaluate) is the Spark service that evaluates each measurement to decide whether or not it is valid, and then further processes the valid results for later consumption. It listens out for on-chain events that indicate that the Spark Publish logic has posted a commitment on chain. It then takes the CID of the on chain commitment and fetches the corresponding measurements from Storacha.
 
 Once Spark-Evaluate retrieves the measurements, it does “fraud detection” to remove all unwanted [Retrieval Task Measurement](#retrieval-task-measurement)s as summarized below:
 
