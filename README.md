@@ -45,8 +45,8 @@ Service Class | Status
 
 Service Level Indicator | Status
 -- | --
-[Spark Retrieval Success Rate](./service-level-indicators/spark-retrieval-success-rate.md) | ![in review](https://img.shields.io/badge/status-in-review-yellow.svg?style=flat-square): this is the first SLI that has been worked to meet expectations both in terms of supporting documentation and being on chain.  It is expected to serve as an example for to-be-created SLIs.
-["(TBD) Sector Health Rate"](./service-level-indicators/sector-health-rate.md) | ![wip](https://img.shields.io/badge/status-wip-orange.svg?style=flat-square): while this using the original proof of spacetime (PoSt) that has always been with Filecoin, the documentation for how the metric is computed and what it does and doesn't measure hasn't been developed.
+[Spark Retrieval Success Rate](./service-level-indicators/spark-retrieval-success-rate.md) | ![review](https://img.shields.io/badge/status-in-review-yellow.svg?style=flat-square) this is the first SLI that has been worked to meet expectations both in terms of supporting documentation and being on chain.  It is expected to serve as an example for to-be-created SLIs.
+["(TBD) Sector Health Rate"](./service-level-indicators/sector-health-rate.md) | ![wip](https://img.shields.io/badge/status-wip-orange.svg?style=flat-square) while this using the original proof of spacetime (PoSt) that has always been with Filecoin, the documentation for how the metric is computed and what it does and doesn't measure hasn't been developed.
 
 * A Service Level Indicator (SLI) is a metric that measures compliance with an [SLO](#service-level-objectives). SLI is the actual measurement. To meet the SLO, the SLI will need to meet or exceed the promises made by the SLO.  
 * SLIs are defined in the [`service-level-indicators` directory](./service-level-indicators/).
