@@ -1,4 +1,4 @@
-# Spark Request-Based (Non-Committee) Global Retrieval Success Rate <!-- omit from toc -->
+# Sector Health Rate <!-- omit from toc -->
 
 - [Meta](#meta)
   - [Document Purpose](#document-purpose)
@@ -6,8 +6,6 @@
   - [Support, Questions, and Feedback](#support-questions-and-feedback)
 - [TL;DR](#tldr)
 - [Metric Definition](#metric-definition)
-- [of Active Sectors - # of Faulted Sectors](#of-active-sectors----of-faulted-sectors)
-- [of Active Sectors](#of-active-sectors)
 - [Implementation Details](#implementation-details)
   - [Path 1: Lotus RPC Calls](#path-1-lotus-rpc-calls)
   - [Path 2: Lily Events](#path-2-lily-events)
@@ -20,12 +18,12 @@
 
 ## Document Purpose
 
-This document is intended to become the canonical resource that is referenced in [the Storage Providers Market Dashboard](https://github.com/filecoin-project/filecoin-storage-providers-market) wherever the “Sector Health” graphs are shown.  A reader of those graphs should be able to read this document and understand the Sector Health SLO”.  The goal of this document is to explain fully and clearly “the rules of the game”.  With the “game rules”, we seek to empower market participants - onramps, aggregators and Storage Providers (SPs) - to “decide how they want to play the game”.
+This document is intended to become the canonical resource that is referenced in [the Storage Providers Market Dashboard](https://github.com/filecoin-project/filecoin-storage-providers-market) wherever the “(TBD) Sector Health” graphs are shown.  A reader of those graphs should be able to read this document and understand the "Sector Health SLO”.  The goal of this document is to explain fully and clearly “the rules of the game”.  With the “game rules”, we seek to empower market participants - onramps, aggregators and Storage Providers (SPs) - to “decide how they want to play the game”.
 
 ## Versions / Status
 SLI Version | Status | Comment
 -- | -- | --
-v1.0.0 | In Progress | 2024-11-04: this was started as a placeholder to start moving the exploration work from https://github.com/davidgasquez/filecoin-data-portal/issues/79 over and to seed this repo with more than one metric defintion.  It needs more reviiew, and particularly SP feedback on the caveats of this metric.  It is not decided that "Sector Health Rate" is the right name or that this should be under "durability".  Agains, this current iteration was done to move fast so there is more skeleton in this repo before FDS 5.
+v1.0.0 | ![wip](https://img.shields.io/badge/status-wip-orange.svg?style=flat-square) | 2024-11-04: this was started as a placeholder to start moving the exploration work from https://github.com/davidgasquez/filecoin-data-portal/issues/79 over and to seed this repo with more than one metric definition.  It needs more review, and particularly SP feedback on the caveats of this metric.  It is not decided that "Sector Health Rate" is the right name or that this should be under "durability".  Agains, this current iteration was done to move fast so there is more skeleton in this repo before FDS 5.
 
 
 ## Support, Questions, and Feedback
@@ -44,9 +42,7 @@ On a daily basis and for each SP compute:
 
 An SP's daily sector health rate is then
 
-# of Active Sectors - # of Faulted Sectors
-----------------------------------
-# of Active Sectors
+$$\frac{\text{# of Active Sectors - # of Faulted Sectors}}{\text{# of Active Sectors}}$$
 
 # Implementation Details
 There are multiple ways to compute this metric.  Multiple options are outlined as they differ in self-service local reproducibility vs. scale.  
