@@ -46,7 +46,7 @@
 
 ## Document Purpose
 
-This document is intended to become the canonical resource that is referenced in [the Storage Providers Market Dashboard](https://github.com/filecoin-project/filecoin-storage-providers-market) wherever the “Spark Retrievability” graphs are shown.  A reader of those graphs should be able to read this document and understand the “Spark Retrievability SLO”.  The goal of this document is to explain fully and clearly “the rules of the game”.  With the “game rules”, we seek to empower market participants - onramps, aggregators and Storage Providers (SPs) - to “decide how they want to play the game”.
+This document is intended to become the canonical resource that is referenced in [the Storage Providers Market Dashboard](https://github.com/filecoin-project/filecoin-storage-providers-market) wherever the “Spark Retrievability” graphs are shown. A reader of those graphs should be able to read this document and understand the “Spark Retrievability SLO”. The goal of this document is to explain fully and clearly “the rules of the game”.  With the “game rules”, we seek to empower market participants - onramps, aggregators and Storage Providers (SPs) - to “decide how they want to play the game”.
 
 ## Versions
 
