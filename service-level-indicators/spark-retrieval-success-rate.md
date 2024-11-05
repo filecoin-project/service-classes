@@ -8,9 +8,6 @@
 - [Spark Protocol](#spark-protocol)
   - [Deal Ingestion](#deal-ingestion)
   - [Task Sampling](#task-sampling)
-    - [**Which of the tasks in the Round Retrieval Task List should each Checker perform?**](#which-of-the-tasks-in-the-round-retrieval-task-list-should-each-checker-perform)
-    - [**How does the protocol orchestrate the Spark Checkers to perform different tasks from each other at random  such that each Task is completed by at least $m$ checkers?**](#how-does-the-protocol-orchestrate-the-spark-checkers-to-perform-different-tasks-from-each-other-at-random--such-that-each-task-is-completed-by-at-least-m-checkers)
-    - [**How many tasks should each checker do per round? What value is given to $k$?**](#how-many-tasks-should-each-checker-do-per-round-what-value-is-given-to-k)
   - [Retrieval Checks](#retrieval-checks)
   - [Reporting Measurements to Spark-API](#reporting-measurements-to-spark-api)
   - [Evaluating Measurements with Spark-Evaluate](#evaluating-measurements-with-spark-evaluate)
@@ -87,7 +84,7 @@ It is important for the security of the protocol that the Retrieval Tasks in eac
 
 During each round, the Spark Checkers are able to download the current Round Retrieval Task List. You can see the current Round Retrieval Task List here: [http://api.filspark.com/rounds/current](http://api.filspark.com/rounds/current). 
 
-### **Which of the tasks in the Round Retrieval Task List should each Checker perform?**
+**Which of the tasks in the Round Retrieval Task List should each Checker perform?**
 
 A simple approach for testing all tasks in the Round Retrieval Task List would be to ask all Spark Checkers (i.e., currently people who are running [Filecoin Station](https://filstation.app)) to check whether or not they can complete each Retrieval Task in the round, by attempting to retrieve the CID from the Storage Provider. However, there are many thousands of Spark Checkers and it would be wasteful to ask them all to test every task in each round. This would also create a lot of unnecessary load on the SPs.
 
@@ -95,7 +92,7 @@ At the other end of spectrum, the protocol could ask only one Spark Checker to c
 
 The current approach lies between these two ends of the spectrum. By asking a subset of Spark Checkers to perform each of the Retrieval Tasks in the round, we can test far more deals in each round, avoiding unnecessarily load-testing an SP for one CID, while having enough Checkers perform the same test to build confidence in the result. Specifically, our confidence here is based on assumptions about what percentage of the network of checkers is acting honestly.
 
-### **How does the protocol orchestrate the Spark Checkers to perform different tasks from each other at random  such that each Task is completed by at least $m$ checkers?**
+**How does the protocol orchestrate the Spark Checkers to perform different tasks from each other at random  such that each Task is completed by at least $m$ checkers?**
 
 As previously mentioned, the checkers start each round by downloading the Round Retrieval Task List. For each task that’s in the List, the checker calculates the task’s “key” by SHA256-hashing the task together with the current dRand randomness, fetched from the [dRand network API](https://github.com/filecoin-station/spark-evaluate/blob/a231822d3d78e3d096425a53a300f8c6c82ee01f/lib/drand-client.js#L29-L33). Leveraging the wonderful properties of cryptographic hash functions, these hash values will be randomly & uniformly distributed in the entire space of $2^{256}$ values. Also, by including the randomness in the input alongside the Eligible Deal details, we will get a different hash digest for a given Eligible Deal in each round. We can define the `taskKey` as
 
@@ -119,7 +116,7 @@ Note that, at the start of each round, the protocol doesn’t know which Spark C
 
 Following the above approach, for each Retrieval Task, there are a set of Checkers who find this task among their $k$ closest and they will attempt the task in the round. We refer to the set of checkers who attempt a Retrieval Task as the “[Committee](#committee) ” for that task. Since we are hashing over a random value for each task when we create its `taskKey`, this approach mitigates against one party controlling an entire committee and dominating the honest majority consensus decision later in the protocol.
 
-### **How many tasks should each checker do per round? What value is given to $k$?**
+**How many tasks should each checker do per round? What value is given to $k$?**
 
 The choice of $k$ is determined by Spark protocol logic that aims to keep the overall number of Spark measurements completed by the total network per round fixed. This is important because we don’t want the number of requests that Storage Providers need to deal with go up as the number of Spark Checkers in the network increases.
 
