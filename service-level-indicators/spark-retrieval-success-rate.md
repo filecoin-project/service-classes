@@ -154,7 +154,7 @@ When the Spark Checkers have completed a retrieval and determined whether or not
 <aside>
 ℹ️
 
-Failed retrieval attempts are also reported with a reason code for the failure reason.  Failure reasons and how they map to RSR are covered in [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr).
+Failed retrieval attempts are also reported with a reason code for the failure reason. Failure reasons and how they map to RSR are covered in [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr).
 
 </aside>
 
