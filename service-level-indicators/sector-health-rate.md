@@ -42,7 +42,7 @@ On a daily basis and for each SP compute:
 
 An SP's daily sector health rate is then
 
-$$\frac{\text{# of Active Sectors - # of Faulted Sectors}}{\text{# of Active Sectors}}$$
+$$\frac{\text{Number of Active Sectors - Number of Faulted Sectors}}{\text{Number of Active Sectors}}$$
 
 # Implementation Details
 There are multiple ways to compute this metric.  Multiple options are outlined as they differ in self-service local reproducibility vs. scale.  
