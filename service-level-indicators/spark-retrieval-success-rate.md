@@ -97,32 +97,35 @@ The current approach lies between these two ends of the spectrum. By asking a su
 As previously mentioned, the checkers start each round by downloading the Round Retrieval Task List. For each task that’s in the List, the checker calculates the task’s “key” by SHA256-hashing the task together with the current dRand randomness, fetched from the [dRand network API](https://github.com/filecoin-station/spark-evaluate/blob/a231822d3d78e3d096425a53a300f8c6c82ee01f/lib/drand-client.js#L29-L33). Leveraging the wonderful properties of cryptographic hash functions, these hash values will be randomly & uniformly distributed in the entire space of $2^{256}$ values. Also, by including the randomness in the input alongside the Eligible Deal details, we will get a different hash digest for a given Eligible Deal in each round. We can define the `taskKey` as
 
 ```jsx
-taskKey = SHA256(payloadCid || miner_id || drand)
+taskKey = SHA256(payloadCid + miner_id + drand)
 ```
 
-Each Spark Checker node can also calculate the SHA256 hash of its Station Id. This is fixed across rounds as it doesn’t depend on any round-specific inputs. (In the future, the protocol may add the drand value into the hash input of the nodeKey too.)
+Each Spark Checker node can also calculate the SHA256 hash of its Station Id. This is fixed across rounds as it doesn’t depend on any round-specific inputs. In the future, the protocol may add the drand value into the hash input of the nodeKey too.
 
 ```jsx
 nodeKey = SHA256(station_id)
 ```
 
-The checker can then find its $k$ “closest” tasks, using XOR as the distance metric. These $k$ tasks are the Retrieval Tasks the Spark Checker node is eligible to complete.  Any other tasks submitted by the checker are not evaluated or rewarded.
+The checker can then find its $k$ “closest” tasks, using XOR as the distance metric. These $k$ tasks are the Retrieval Tasks the Spark Checker node is eligible to complete. Any other tasks submitted by the checker are dismissed.
 
 ```jsx
 dist = taskKey XOR nodeKey
 ```
 
-Note that, at the start of each round, the protocol doesn’t know which Spark Checkers will participate as there are no uptime requirements on these checkers. This means the Spark protocol can’t centrally form groups of checkers and assign them a subset of the Round Retrieval Task List. The above approach doesn’t make any assumptions about which checkers are online, but instead relies on the fact that the `nodeKeys` will be evenly distributed around the SHA256 hash ring.
+Note that, at the start of each round, the protocol doesn’t know which Spark Checkers will participate as there are no uptime requirements on these checkers. This means the Spark protocol can’t centrally form groups of checkers and assign them a subset of the Round Retrieval Task List. The above approach doesn’t make any assumptions about which checkers are online, but instead relies on the fact that the `nodeKeys` will be evenly distributed around the SHA256 hash ring, so that enough nodes will be assigned each task.
 
-Following the above approach, for each Retrieval Task, there are a set of Checkers who find this task among their $k$ closest and they will attempt the task in the round. We refer to the set of checkers who attempt a Retrieval Task as the “[Committee](#committee) ” for that task. Since we are hashing over a random value for each task when we create its `taskKey`, this approach mitigates against one party controlling an entire committee and dominating the honest majority consensus decision later in the protocol.
+Following the above approach, for each Retrieval Task, there are a set of Checkers who find this task among their $k$ closest and they will attempt the task in the round. We refer to the set of checkers who attempt a Retrieval Task as the “[Committee](#committee)” for that task..
 
 **How many tasks should each checker do per round? What value is given to $k$?**
 
-The choice of $k$ is determined by Spark protocol logic that aims to keep the overall number of Spark measurements completed by the total network per round fixed. This is important because we don’t want the number of requests that Storage Providers need to deal with go up as the number of Spark Checkers in the network increases.
+The choice of $k$ is determined by Spark protocol logic that aims to keep the overall number of Spark measurements completed by the total network per round fixed.
+This is important because
+- We don’t want the number of requests that Storage Providers need to deal with to go up as the number of Spark Checkers in the network increases
+- There needs to be enough nodes in each committee for its result to be considered reliable
 
 In each round, the [Round Retrieval Task List data object](http://api.filspark.com/rounds/current) specifies $k$ in a field called `maxTasksPerNode`. At the start of each round, the [spark-api](https://github.com/filecoin-station/spark-api) service looks at the number of measurements reported by the network in the previous round, compares it against the desired value, and adjusts both maxTaskPerNode $k$ and the length of the Round Retrieval Task List for the new round.
 
-The choices in each round for $k$ and the length of the Round Retrieval Task List also determine the size of the committee for each Retrieval Task. This is how we ensure each task is completed by at least $m$ checkers; the committee for each task is designed to include [between 40 and 100 checkers](https://www.notion.so/745b0e1020bb4000ac77acafee09e683?pvs=21) to make sure there are enough Measurements to add mitigations against malicious actors, but not too many that we load test the Storage Providers.
+The choices in each round for $k$ and the length of the Round Retrieval Task List also influence the size of the committee for each Retrieval Task. This is how we ensure each task is completed by at least $m$ checkers; the committee for each task is designed to include [between 40 and 100 checkers](https://www.notion.so/745b0e1020bb4000ac77acafee09e683?pvs=21) to make sure there are enough Measurements to add mitigations against malicious actors, but not too many that we load test the Storage Providers.
 
 The Spark Checkers that are members of each committee will go on to make the same [retrieval checks](#retrieval-checks) in the round. Each committee member then publishes their results to the Spark API (see [Reporting Measurements to Spark-API](#reporting-measurements-to-spark-api)), which then calculates the honest majority consensus about the result of the Retrieval Task (see [Evaluating Measurements with Spark-Evaluate](#evaluating-measurements-with-spark-evaluate)).
 
@@ -182,7 +185,7 @@ At this point of the protocol, we have a set of valid measurements for each roun
 Given a specific timeframe, the top level Spark RSR figure is calculated by taking the number of all successful valid retrievals made in that time frame and dividing it by the number of all “contributing” valid retrieval requests made in that time frame.  When we say “contributing” retrieval requests, we mean all valid successful retrieval requests as well as all the valid retrieval requests that failed due to some issue on the storage provider’s end or with IPNI.  (See [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr) for a detailed breakdown of failure cases that are “contributing”.)
 
 $$
-RSR = {\# successful \over \# successful + \# failure}
+RSR = {count(successful) \over count(successful) + count(failure)}
 $$
 
 However, as you may notice, we have not used the honest majority consensus results in this calculation. Here we are counting over all valid requests. This is because there is an intricacy when it comes to using the committee consensus results.
