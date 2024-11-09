@@ -1,4 +1,4 @@
-# Spark Request-Based (Non-Committee) Global Retrieval Success Rate <!-- omit from toc -->
+# Spark Request-Based (Non-Committee) Global Retrieval Success Rate <!-- omit from toc --> 
 
 - [Meta](#meta)
   - [Document Purpose](#document-purpose)
