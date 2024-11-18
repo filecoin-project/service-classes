@@ -21,7 +21,7 @@
     - [Checker / Checker Node](#checker--checker-node)
     - [Committee](#committee)
     - [Eligible Deal](#eligible-deal)
-    - [**Retrieval Task**](#retrieval-task)
+    - [Retrieval Task](#retrieval-task)
     - [Round Retrieval Task List](#round-retrieval-task-list)
     - [Retrieval Result](#retrieval-result)
     - [Retrieval Task Measurement](#retrieval-task-measurement)
@@ -33,7 +33,7 @@
   - [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr)
   - [Per Request (non-committee) Score vs. Committee Scoring](#per-request-non-committee-score-vs-committee-scoring)
   - [FAQ](#faq)
-    - [Why is graphsync used?](#why-is-graphsync-used)
+    - [Why is GraphSync used?](#why-is-graphsync-used)
     - [What improvements are planned for Spark retrieval checking?](#what-improvements-are-planned-for-spark-retrieval-checking)
     - [Why do checkers report back the storage clients that made the deal?](#why-do-checkers-report-back-the-storage-clients-that-made-the-deal)
     - [Why do IPNI outages impact SP RSR?](#why-do-ipni-outages-impact-sp-rsr)
@@ -48,13 +48,13 @@ This document is intended to become the canonical resource that is referenced in
 ## Versions
 
 TODO: add a table that shows Spark RSR version 1 is supported by which backend component versions.
-When we have v1.1, this would be a new row in a table, with a new set of backend cmponents.  
+When we have v1.1, this would be a new row in a table, with a new set of backend components.  
 
 ## Support, Questions, and Feedback
 TODO: fill this in
 If you see errors in this document, please open a PR.
 If you have a question that isn't answered by the document, then ...
-If you want to discuss ideas for improving this proposoal, then ...
+If you want to discuss ideas for improving this proposal, then ...
 
 # TL;DR
 
@@ -78,9 +78,9 @@ The end result of the Deal Ingestion step is a database of all Eligible Deals th
 
 ## Task Sampling
 
-Each round of the Spark protocol is approximately 20 minutes. At the start of each round, the [Spark tasking service randomly selects a set of records](https://github.com/filecoin-station/spark-api/blob/f77aa4269ab8c19ff64b9b9ff22462c29a6b8514/api/lib/round-tracker.js#L310) from all [Eligible Deal](#eligible-deal) . We refer to each of these records as a [**Retrieval Task**](#retrieval-task)  [](Spark%20Request-Based%20(Non-Committee)%20Global%20Retriev%204c5e8c47c45f467f80392d00cac2aae4.md)and, specifically, it is the combination of an Eligible Deal and a Round Id. We will also refer to the set of Retrieval Tasks in the round as the [Round Retrieval Task List](#round-retrieval-task-list). 
+Each round of the Spark protocol is approximately 20 minutes. At the start of each round, the [Spark tasking service randomly selects a set of records](https://github.com/filecoin-station/spark-api/blob/f77aa4269ab8c19ff64b9b9ff22462c29a6b8514/api/lib/round-tracker.js#L310) from all [Eligible Deals](#eligible-deal). We refer to each of these records as a [Retrieval Task](#retrieval-task) and, specifically, it is the combination of an Eligible Deal and a Round Id. We will also refer to the set of Retrieval Tasks in the round as the [Round Retrieval Task List](#round-retrieval-task-list). 
 
-It is important for the security of the protocol that the Retrieval Tasks in each round are chosen at random. This is to prevent Spark checkers from being able to choose their own tasks that may benefit them, such as if an SP wanted to run lots of tasks against itself. We don’t yet use Drand for randomness for choosing the Round Retrieval Task List but we would like to introduce that to improve the end-to-end verifiability ([Github](https://github.com/space-meridian/roadmap/issues/182)).
+It is important for the security of the protocol that the Retrieval Tasks in each round are chosen at random. This is to prevent Spark checkers from being able to choose their own tasks that may benefit them, such as if an SP wanted to run lots of tasks against itself. We don’t yet use drand for randomness for choosing the Round Retrieval Task List but we would like to introduce that to improve the end-to-end verifiability ([Github](https://github.com/space-meridian/roadmap/issues/182)).
 
 During each round, the Spark Checkers are able to download the current Round Retrieval Task List. You can see the current Round Retrieval Task List here: [http://api.filspark.com/rounds/current](http://api.filspark.com/rounds/current). 
 
@@ -144,12 +144,12 @@ A Spark Checker’s retrieval test of `(CID, providerID)` is performed with the 
 1. Call Filecoin RPC API method `Filecoin.StateMinerInfo` to map `providerID` to `PeerID`.
 2. Call [`https://cid.contact/cid/{CID}`](https://cid.contact/cid/%7BCID%7D) to obtain all retrieval providers for the given CID.
 3. Filter the response to find the provider identified by `PeerID` found in Step 1 and obtain the multiaddr(s) where this provider serves retrievals.
-4. Retrieve the root block of the content identified by `CID` from that multiaddr using Graphsync or the [IPFS Trustless Gateway protocol](https://specs.ipfs.tech/http-gateways/trustless-gateway/) (over HTTP). It uses the protocol advertised to IPNI for the retrieval. If both protocols are advertised, then it chooses HTTP.
+4. Retrieve the root block of the content identified by `CID` from that multiaddr using GraphSync or the [IPFS Trustless Gateway protocol](https://specs.ipfs.tech/http-gateways/trustless-gateway/) (over HTTP). It uses the protocol advertised to IPNI for the retrieval. If both protocols are advertised, then it chooses HTTP.
 5. Verify that the received block matches the `CID`.
 
 ## Reporting Measurements to Spark-API
 
-When the Spark Checkers have completed a retrieval and determined whether or not the CID is retrievable by following the above steps, they report their result, which we call a measurement to the Spark-API service. Spark-API ingests these measurements, batches them into chunks of up to 100k measurements, uploads each chunk to [web3.storage](http://web.storage) (now Storacha), and commits the batch CID to the Spark [smart contract](https://github.com/filecoin-station/spark-impact-evaluator). We call this the [Spark-Publish logic](https://github.com/filecoin-station/spark-api/tree/main/publish).
+When the Spark Checkers have completed a retrieval and determined whether or not the CID is retrievable by following the above steps, they report their result, which we call a measurement to the Spark-API service. Spark-API ingests these measurements, batches them into chunks of up to 100k measurements, uploads each chunk to [web3.storage](http://web.storage)/Storacha, and commits the batch CID to the Spark [smart contract](https://github.com/filecoin-station/spark-impact-evaluator). We call this the [Spark-Publish logic](https://github.com/filecoin-station/spark-api/tree/main/publish).
 
 <aside>
 ℹ️
@@ -167,7 +167,7 @@ Once Spark-Evaluate retrieves the measurements, it does “fraud detection” to
 | [Retrieval Task Measurement](#retrieval-task-measurement)s which are removed | Why removed? |
 | --- | --- |
 | Those for [Eligible Deal](#eligible-deal)s not in the round | To prevent checkers from checking any [Eligible Deal](#eligible-deal) of their choosing either to inflate or tarnish an SP’s stats. |
-| Those which are for [**Retrieval Task**](#retrieval-task)s that are not within the $k$-closest for a checker | Same principle as above.  It’s not good enough to pick any [**Retrieval Task**](#retrieval-task) from the [Round Retrieval Task List](#round-retrieval-task-list). |
+| Those which are for [Retrieval Tasks](#retrieval-task) that are not within the $k$-closest for a checker | Same principle as above.  It’s not good enough to pick any [Retrieval Task](#retrieval-task) from the [Round Retrieval Task List](#round-retrieval-task-list). |
 | Those which are submitted after the first $k$ measurements from a given IPV4 /24 subnet. (i.e, The first $k$ [Retrieval Task Measurement](#retrieval-task-measurement)  within a IPv4 /24 subnet are accepted.  Others are rejected.) | Prevent a malicious actor from creating tons of station ids that are then used to “stuff the ballot box” from one node. IPV4 /24 subnets are being used here as a scarce resource. |
 
 With these [Committee Accepted Retrieval Task Measurements](#committee-accepted-retrieval-task-measurements) that passed fraud detection, Spark Evaluate then performs the honest majority consensus.  For each task, it calculates the honest majority result from the task’s committee, and it stores this aggregated result in Spark’s DB. These aggregate results are called [Provider Retrieval Result Stats](#provider-retrieval-result-stats).  They are packaged into a CAR which will is stored with Storacha, and the CID of this CAR is stored on chain.
@@ -182,7 +182,7 @@ There are two final steps in the Spark protocol that pertain to how Spark checke
 
 At this point of the protocol, we have a set of valid measurements for each round stored off chain and committed to on chain for verifiability. From this we can calculate the Spark RSR values.
 
-Given a specific timeframe, the top level Spark RSR figure is calculated by taking the number of all successful valid retrievals made in that time frame and dividing it by the number of all “contributing” valid retrieval requests made in that time frame.  When we say “contributing” retrieval requests, we mean all valid successful retrieval requests as well as all the valid retrieval requests that failed due to some issue on the storage provider’s end or with IPNI.  (See [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr) for a detailed breakdown of failure cases that are “contributing”.)
+Given a specific time frame, the top level Spark RSR figure is calculated by taking the number of all successful valid retrievals made in that time frame and dividing it by the number of all “contributing” valid retrieval requests made in that time frame.  When we say “contributing” retrieval requests, we mean all valid successful retrieval requests as well as all the valid retrieval requests that failed due to some issue on the storage provider’s end or with IPNI.  (See [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr) for a detailed breakdown of failure cases that are “contributing”.)
 
 $$
 RSR = {count(successful) \over count(successful) + count(failure)}
@@ -196,9 +196,9 @@ We believe that the 70% value is more accurate, yet we also need committees to p
 
 ## Spark RSR by SP
 
-To calculate a Spark RSR for an SP in a given timeframe, the Spark protocol:
+To calculate a Spark RSR for an SP in a given time frame, the Spark protocol:
 
-1. takes all retrieval tasks that are linked to a given `providerID` in the timeframe.
+1. takes all retrieval tasks that are linked to a given `providerID` in the time frame.
 2. counts the number of successful [Accepted Retrieval Task Measurement](#accepted-retrieval-task-measurement)s (numerator)
 3. counts the number of [Accepted Retrieval Task Measurement](#accepted-retrieval-task-measurement)s that should map to RSR (denominator)
 4. divides the numerator by the denominator.
@@ -217,7 +217,7 @@ Nodes that do retrievability checks.  In practice, these are primarily Station n
 
 ### Committee
 
-[Checker / Checker Node](#checker--checker-node)s that have performed the same [**Retrieval Task**](#retrieval-task)  in a round
+[Checker / Checker Node](#checker--checker-node)s that have performed the same [Retrieval Task](#retrieval-task)  in a round
 
 - Committees aren’t formed during tasking. Nodes pick tasks based on the hash of their self-generated id. The scheduler doesn’t assign tasks to nodes, because at the beginning of the round it doesn’t yet know who will participate.  See [Task Sampling](#task-sampling) for more info.
 
@@ -230,7 +230,7 @@ Nodes that do retrievability checks.  In practice, these are primarily Station n
     - Consumed by [Task Sampling](#task-sampling)
     - Callout: we only have some of the payloadCIDs.  While there is at least one for every deal, deals with multiple payload CIDs only have one payload CID in the Eligible Deals DB.
 
-### **Retrieval Task**
+### Retrieval Task
 
 - `(roundId, providerId, payloadCID)`
     - For each round, randomly sourced from Eligible deals
@@ -245,7 +245,7 @@ Nodes that do retrievability checks.  In practice, these are primarily Station n
 - `[Retrieval Task]`
     - The set of retrieval tasks that were selected for a given round.
     - Downloaded by Checkers as part of [Task Sampling](#task-sampling)
-    - Note: creation/consumption is the same as [**Retrieval Task**](#retrieval-task)
+    - Note: creation/consumption is the same as [Retrieval Task](#retrieval-task)
 
 ### Retrieval Result
 
@@ -281,7 +281,7 @@ Nodes that do retrievability checks.  In practice, these are primarily Station n
 
 ### Accepted Retrieval Task Measurement
 
-- `(roundId, providerId, payloadCID, checkerId, retrievalResult, retrtievalResultCode, clients)`
+- `(roundId, providerId, payloadCID, checkerId, retrievalResult, retrievalResultCode, clients)`
     - A [Retrieval Task Measurement](#retrieval-task-measurement) that passes the fraud detection checks during [Evaluating Measurements with Spark-Evaluate](#evaluating-measurements-with-spark-evaluate)
     - Created during [Evaluating Measurements with Spark-Evaluate](#evaluating-measurements-with-spark-evaluate)
     - Created by Spark-Evaluate
@@ -289,7 +289,7 @@ Nodes that do retrievability checks.  In practice, these are primarily Station n
 
 ### Committee Accepted Retrieval Task Measurements
 
-- `(roundId, providerId, payloadCID, checkerId, retrievalResult, retrtievalResultCode, clients)`
+- `(roundId, providerId, payloadCID, checkerId, retrievalResult, retrievalResultCode, clients)`
     - The [Accepted Retrieval Task Measurement](#accepted-retrieval-task-measurement)s for a [Committee](#committee).
     - Created during [Evaluating Measurements with Spark-Evaluate](#evaluating-measurements-with-spark-evaluate)s.  This is what is stored off chain, with a pointer on chain.
     - Created by Spark-Evaluate
@@ -343,13 +343,14 @@ For full transparency, a list of potential issues or concerns about this SLI are
 2. Spark Publish doesn’t have any AuthN/AuthZ: In an ideal future state, Spark Checkers would sign their measurements so that we can build confidence and reputation around Spark Checker (Station) Ids. Without AuthN/AuthZ, it is easy to impersonate another checker since all `checkerId` are publicly discoverable by processing the publicly retrievable [Retrieval Task Measurement](#retrieval-task-measurement)s. 
 3. Spark only checks on deals stored with datacap using the f05 storage market actor and the deal must have a “payload CID” label.  This means Spark v1 excludes DDO deals, which when last checked in October 2024, means that Spark is checking about 56% of deals.  Spark v2 which will ship in early 2025 will include DDO deals.
 4. Spark API is receiving, aggregating, and publishing the checker results which are discoverable on chain.  Spark’s code is open-sourced, but there is trust that Spark isn’t doing additional result modifying like adding results for a checker that didn’t actually submit results. An individual Spark checker can verify that their own measurements have been included and committed to on chain. They can also rerun the Spark evaluate logic with all the measurements from the round.  
-5. An SP gets credit for a retrieval even if they fail [IPFS trustless gateway HTTP retrieval](https://specs.ipfs.tech/http-gateways/trustless-gateway/) but succeed with Graphsync retrieval.  The concern with GraphSync only support is that there aren’t active maintainers for the protocol and that it is harder for clients to use than HTTP.  (See [Why is graphsync used?](#why-is-graphsync-used) )
+5. An SP gets credit for a retrieval even if they fail [IPFS trustless gateway HTTP retrieval](https://specs.ipfs.tech/http-gateways/trustless-gateway/) but succeed with GraphSync retrieval.  The concern with GraphSync only support is that there aren’t active maintainers for the protocol and that it is harder for clients to use than HTTP.  (See [Why is GraphSync used?](#why-is-graphsync-used) )
 6. Verified deals are indexed on a weekly basis. As a result, it’s possible that the payload CID of a verified deal will not get checked for a week plus after deal creation.
 7. Spark station ids are self-generated.  This means a checker can potentially have many station ids and then report results using a station id that passes “[fraud checks](#fraud-checks)”.  The limit on duplicate IPv4 /24 subnets helps prevent “stuffing/overflowing the ballot box” but it doesn’t prevent one from “poisoning it” with some untruthful failed results.  There is a [backlog item](https://github.com/space-meridian/roadmap/issues/180) to weight results by to-be-determined “checker reputation”.
 8. Storage Providers can currently go into “ghost mode” where they don’t get any retrieval results reported, regardless if they actually are or aren’t retrievable.  They accomplish this by keeping retrieval connections open for longer than the round by making a “byte of progress every 60 seconds”.  This is because Spark checkers currently only have a “progress timeout”, not a “max request duration” timeout.  There is a [backlog item to fix this](https://github.com/filecoin-station/spark/issues/99).
 9. Spark makes retrievability checks assuming public global retrievability.  It doesn’t support network partitions or access-controlled data.  As a result, SPs in China with storage deals will have a 0 retrieval success rate. 
 10. Spark can only check retrievability of data that has an unsealed copy.  There currently is no protocol-defined way for requesting an SP unseal a sector and then checking for retrievability later.   
 11. Per [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr), an SP’s RSR can be impacted by areas outside of their control like IPNI.  See also  [Why do IPNI outages impact SP RSR?](#why-do-ipni-outages-impact-sp-rsr).
+12. Checker traffic is pretty easy to differentiate from real traffic for a Storage Provider given checker traffic only requests the `payloadCid`. Am SP can look at the [Round Retrieval Task List](#round-retrieval-task-list), see which tasks they are the listed "minerId" for, and then just make sure to serve the corresponding `payloadCid`s in that 20 minute period.  This would enable them to have 100% RSR even if they don't serve any other retrievals.
 
 ## Retrieval Result Mapping to RSR
 
@@ -492,7 +493,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     <tr>
       <td>HTTP_{number}</td>
       <td>
-        When the checker requested the CAR bytes using the Trustless HTTP Gateway protocol, the server (storage provider) responed with HTTP status code <code>{number}</code>.<br />
+        When the checker requested the CAR bytes using the Trustless HTTP Gateway protocol, the server (storage provider) responded with HTTP status code <code>{number}</code>.<br />
         Example codes: <code>HTTP_502</code>, <code>HTTP_504</code>.
       </td>
       <td>YES</td>
@@ -500,7 +501,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
     <tr>
       <td>LASSIE_${number}</td>
       <td>
-        When the checker made an HTTP request to the local Lassie daemon handling Graphsync retrievals for Spark, Lassie responded with HTTP status code <code>{number}</code>.<br />
+        When the checker made an HTTP request to the local Lassie daemon handling GraphSync retrievals for Spark, Lassie responded with HTTP status code <code>{number}</code>.<br />
         Example codes: <code>LASSIE_502</code>, <code>LASSIE_504</code>.<br />
         Documentation for Lassie HTTP response status codes:
         https://github.com/filecoin-project/lassie/blob/main/docs/HTTP_SPEC.md#response-status-codes
@@ -545,7 +546,7 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
       <td>Description</td>
       <td>
         <p>Every request made by a Spark checker feeds into the metric (after doing basic “fraud” detection”), regardless of whether the checker’s result aligns with its committee.</p>
-        <p>For every <code>&lt;round, providerId, payloadCid&gt;</code>, the number of datapoints feeding into the SLI should be close to the size of the committee.  Committee size p50 is ~80, but it ultimately depends on depends on which nodes participate in the round. The aim is to have most committee sizes in the range of 40 to 100.</p>
+        <p>For every <code>&lt;round, providerId, payloadCid&gt;</code>, the number of data points feeding into the SLI should be close to the size of the committee.  Committee size p50 is ~80, but it ultimately depends on depends on which nodes participate in the round. The aim is to have most committee sizes in the range of 40 to 100.</p>
       </td>
       <td>
         <p>Only the committee’s honest majority result for a <code>&lt;round, providerId, payloadCid&gt;</code> feeds into the metric.</p>
@@ -593,9 +594,9 @@ When [Retrieval Task Measurement](#retrieval-task-measurement)s  are submitted i
 
 ## FAQ
 
-### Why is graphsync used?
+### Why is GraphSync used?
 
-Given no-one is invested in maintaining and developing graphsync, why is it used a transfer protocol for retrieval checking?  In 202410, Spark observes 2/3 of successful retrievals happen over Graphsync because SPs don’t support [IPFS HTTP Trustless Gateway](https://specs.ipfs.tech/http-gateways/trustless-gateway/).  We assume that HTTP numbers could be bolstered by UX and/or lack of documentation for Boost operators.
+Given no-one is invested in maintaining and developing GraphSync, why is it used a transfer protocol for retrieval checking?  In 202410, Spark observes 2/3 of successful retrievals happen over GraphSync because SPs don’t support [IPFS HTTP Trustless Gateway](https://specs.ipfs.tech/http-gateways/trustless-gateway/).  We assume that HTTP numbers could be bolstered by UX and/or lack of documentation for Boost operators.
 
 Future versions of spark retrieval checking (see [What improvements are planned for Spark retrieval checking?](#what-improvements-are-planned-for-spark-retrieval-checking)) will focus on HTTP-based retrieval.
 
