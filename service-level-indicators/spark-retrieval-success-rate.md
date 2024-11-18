@@ -350,7 +350,7 @@ For full transparency, a list of potential issues or concerns about this SLI are
 9. Spark makes retrievability checks assuming public global retrievability.  It doesn’t support network partitions or access-controlled data.  As a result, SPs in China with storage deals will have a 0 retrieval success rate. 
 10. Spark can only check retrievability of data that has an unsealed copy.  There currently is no protocol-defined way for requesting an SP unseal a sector and then checking for retrievability later.   
 11. Per [Retrieval Result Mapping to RSR](#retrieval-result-mapping-to-rsr), an SP’s RSR can be impacted by areas outside of their control like IPNI.  See also  [Why do IPNI outages impact SP RSR?](#why-do-ipni-outages-impact-sp-rsr).
-12. Checker traffic is pretty easy to differentiate from real traffic for a Storage Provider given checker traffic only requests the `payloadCid`. Am SP can look at the [Round Retrieval Task List](#round-retrieval-task-list), see which tasks they are the listed "minerId" for, and then just make sure to serve the corresponding `payloadCid`s in that 20 minute period.  This would enable them to have 100% RSR even if they don't serve any other retrievals.
+12. Checker traffic is pretty easy to differentiate from real traffic for a Storage Provider given checker traffic only requests the `payloadCid`. A SP can look at the [Round Retrieval Task List](#round-retrieval-task-list), see which tasks they are the listed "minerId" for, and then just make sure to serve the corresponding `payloadCid`s in that 20 minute period.  This would enable them to have 100% RSR even if they don't serve any other retrievals.
 
 ## Retrieval Result Mapping to RSR
 
