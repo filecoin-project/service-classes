@@ -47,14 +47,28 @@ This document is intended to become the canonical resource that is referenced in
 
 ## Versions
 
-TODO: add a table that shows Spark RSR version 1 is supported by which backend component versions.
-When we have v1.1, this would be a new row in a table, with a new set of backend components.  
+### Spark v1.0
+
+| Component | Version(s) |
+| - | - |
+| [IE smart contract](https://github.com/filecoin-station/spark-impact-evaluator) | `0x8460766edc62b525fc1fa4d628fc79229dc73031`
+| [RSR smart contract](https://github.com/filecoin-station/spark-rsr-contract) | `0x620bfc5AdE7eeEE90034B05DC9Bb5b540336ff90`
+| [fil-deal-ingester](https://github.com/filecoin-station/fil-deal-ingester) | [latest](https://github.com/filecoin-station/fil-deal-ingester/tree/main) |
+| [spark-api](https://github.com/filecoin-station/spark-api) | [latest](https://github.com/filecoin-station/spark-api/tree/main) |
+| [spark-evaluate](https://github.com/filecoin-station/spark-evaluate) | [latest](https://github.com/filecoin-station/spark-evaluate/tree/main) |
+| [spark checker](https://github.com/filecoin-station/spark) | [latest](https://github.com/filecoin-station/spark/tree/main) |
+
+### Spark v2.0
+
+Spark v2.0 will bring support for DDO deals, which requires breaking changes. Learn more in [Spark v2 design & migration](https://spacemeridian.notion.site/Spark-v2-design-migration-115cdd5cccdb804ca4d1e0694c613318).
 
 ## Support, Questions, and Feedback
-TODO: fill this in
-If you see errors in this document, please open a PR.
-If you have a question that isn't answered by the document, then ...
-If you want to discuss ideas for improving this proposal, then ...
+
+If you see errors in this document, please open a pull request.
+
+If you have a question that isn't answered by the document, then review the [known issues](https://github.com/filecoin-project/service-classes/issues) and open a new one if your question is not covered yet. Mention `@space-meridian/spark` in the issue description.
+
+If you want to discuss ideas for improving this proposal, then review [existing discussions](https://github.com/filecoin-project/service-classes/discussions/) and open a new one if your ideas are not covered yet. Mention `@space-meridian/spark` in the text.
 
 # TL;DR
 
@@ -75,6 +89,18 @@ At least as of October 2024, each week the Spark team ([Space Meridian](https://
 In the future, and when Spark is compatible with Direct Data Onboarding (DDO), there will be real-time deal ingestion into the Spark Eligible Deal database when storage deals are made ([GitHub tracking issue](https://github.com/space-meridian/roadmap/issues/144)). This will mean that new SPs will not need to wait for up to a week to get a Spark score.
 
 The end result of the Deal Ingestion step is a database of all Eligible Deals that should be retrievable.
+
+### Deal Eligibility Criteria
+
+Spark considers a deal as eligible for retrieval testing if it meets the following criteria:
+
+1. `DealProposal.Verified` is `true`
+2. `DealProposal.PieceCID` is set
+3. The deal has not expired yet (`DealProposal.EndEpoch` is in the future)
+4. `DealProposal.Label` field contains a string starting with one of the following prefixes:
+   - `bafy`
+   - `bafk`
+   - `Qm`
 
 ## Task Sampling
 
