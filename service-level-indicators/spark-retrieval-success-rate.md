@@ -3,10 +3,13 @@
 - [Meta](#meta)
   - [Document Purpose](#document-purpose)
   - [Versions](#versions)
+    - [Spark v1.0](#spark-v10)
+    - [Spark v2.0](#spark-v20)
   - [Support, Questions, and Feedback](#support-questions-and-feedback)
 - [TL;DR](#tldr)
 - [Spark Protocol](#spark-protocol)
   - [Deal Ingestion](#deal-ingestion)
+    - [Deal Eligibility Criteria](#deal-eligibility-criteria)
   - [Task Sampling](#task-sampling)
   - [Retrieval Checks](#retrieval-checks)
   - [Reporting Measurements to Spark-API](#reporting-measurements-to-spark-api)
@@ -66,9 +69,9 @@ Spark v2.0 will bring support for DDO deals, which requires breaking changes. Le
 
 If you see errors in this document, please open a pull request.
 
-If you have a question that isn't answered by the document, then review the [known issues](https://github.com/filecoin-project/service-classes/issues) and open a new one if your question is not covered yet. Mention `@space-meridian/spark` in the issue description.
+If you have a question that isn't answered by the document, then review the [known issues](https://github.com/filecoin-project/service-classes/issues) and open a new one if your question is not covered yet. Mention `@filecoin-project/space-meridian` in the issue description.
 
-If you want to discuss ideas for improving this proposal, then review [existing discussions](https://github.com/filecoin-project/service-classes/discussions/) and open a new one if your ideas are not covered yet. Mention `@space-meridian/spark` in the text.
+If you want to discuss ideas for improving this proposal, then review [existing discussions](https://github.com/filecoin-project/service-classes/discussions/) and open a new one if your ideas are not covered yet. Mention `@filecoin-project/space-meridian` in the text.
 
 # TL;DR
 
