@@ -1,6 +1,6 @@
 
 # Status
-* 2024-12-03: Placeholder SLO threshold values were set as a starting point before the 2024-12-03 "Client Success Working Group".
+* 2024-12-03: Placeholder SLO threshold values were set as a starting point before the 2024-12-03 "Client Success Working Group".  Input is needed on what other SLOs are needed, SLO target values, and the name.
 * 2024-11-04: This is a sketch of a service class definition to represent data stored with Filecoin that also has an accompanying unsealed copy for retrieval. Key details like the threshold SLO values and even the name have not been determined or agreed upon.
 
 # Intended Users
