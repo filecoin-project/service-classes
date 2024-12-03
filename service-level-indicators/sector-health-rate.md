@@ -23,13 +23,15 @@ This document is intended to become the canonical resource that is referenced in
 ## Versions / Status
 SLI Version | Status | Comment
 -- | -- | --
-v1.0.0 | ![wip](https://img.shields.io/badge/status-wip-orange.svg?style=flat-square) | 2024-11-04: this was started as a placeholder to start moving the exploration work from https://github.com/davidgasquez/filecoin-data-portal/issues/79 over and to seed this repo with more than one metric definition.  It needs more review, and particularly SP feedback on the caveats of this metric.  It is not decided that "Sector Health Rate" is the right name or that this should be under "durability".  Agains, this current iteration was done to move fast so there is more skeleton in this repo before FDS 5.
+v1.0.0 | ![wip](https://img.shields.io/badge/status-wip-orange.svg?style=flat-square) | 2024-11-04: this was started as a placeholder to start moving the exploration work from https://github.com/davidgasquez/filecoin-data-portal/issues/79 over and to seed this repo with more than one metric definition.  It needs more review, and particularly SP feedback on the caveats of this metric.  It is not decided that "Sector Health Rate" is the right name or that this should be under "durability".  Again, this current iteration was done to move fast so there is more skeleton in this repo before FDS 5.
 
 
 ## Support, Questions, and Feedback
 If you see errors in this document, please open a PR.
+
 If you have a question that isn't answered by the document, then ...
-If you want to discuss ideas for improving this proposoal, then ...
+
+If you want to discuss ideas for improving this proposal, then ...
 
 # TL;DR
 Filecoin has a robust mechanism already for proving spacetime on chain for each sector.  The proportion of successful proofs over time gives indication of the "durability" of data stored on these sectors.
@@ -51,7 +53,7 @@ There are multiple ways to compute this metric.  Multiple options are outlined a
 Below explains the way to compute this method when using Lotus RPC:
 
 * This metric is computed based on a single sampling per SP per day.  This works because:
-  1. A sector that is faulted stays in the fault state for a duration that is a multiple of 24 hours given a sector's state transitions in and out of faulted state happens during the providing dealine for the sector.
+  1. A sector that is faulted stays in the fault state for a duration that is a multiple of 24 hours given a sector's state transitions in and out of faulted state happens during the proving deadline for the sector.
   2. New sectors in a given day may get missed until the next day, but sectors aren't a highly transient resource flipping into and out of existence.  Since sectors tend to have a lifespan of months or years, not counting them on their first day isn't a significant impact on the metric over time.
 * `Number of Active Sectors` is computed by getting the SP's Raw Power ([StateMinerPower](https://lotus.filecoin.io/reference/lotus/state/#stateminerpower)) divided by the SP's sector size ([StateMinerInfo](https://lotus.filecoin.io/reference/lotus/state/#stateminerinfo))).
 * `Number of Faulted Sectors` is computed by daily querying for the [`StateMinerFaults`](https://lotus.filecoin.io/reference/lotus/state/#stateminerfaults) for each SP with sectors.  
